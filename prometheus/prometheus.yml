@@ -1,0 +1,64 @@
+global:
+  scrape_interval: 15s      # How often to collect metrics
+  evaluation_interval: 15s  # How often to evaluate rules
+  scrape_timeout: 10s       # Timeout for scraping
+
+# Alertmanager configuration (for sending alerts)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+          # - alertmanager:9093
+
+# Rule files for alerts
+rule_files:
+  - "alerts.yml"
+  # - "recording_rules.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Our Node.js app
+  - job_name: 'my-app'
+    static_configs:
+      - targets: ['app:3000']
+        labels:
+          service: 'my-app'
+          environment: 'production'
+          team: 'backend'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 8s
+
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+          environment: 'production'
+
+  # Docker containers (via cadvisor - optional)
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          service: 'docker'
+          environment: 'production'
+    scrape_interval: 30s
+
+  # Node/system metrics (via node_exporter - optional)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node_exporter:9100']
+        labels:
+          service: 'node'
+          environment: 'production'
+    scrape_interval: 30s
+
+# Remote write configuration (for long-term storage)
+# Commented out until we have a remote storage endpoint
+# remote_write:
+#   - url: ''  # Add your remote storage endpoint if needed
+
+# remote_read:
+#   - url: ''  # Add your remote storage endpoint if needed

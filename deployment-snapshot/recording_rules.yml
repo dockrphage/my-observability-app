@@ -1,0 +1,19 @@
+groups:
+  - name: app_recording_rules
+    interval: 30s
+    rules:
+      # Record request rate per endpoint
+      - record: job:http_requests_total:rate5m
+        expr: sum by (job) (rate(http_requests_total[5m]))
+
+      # Record request rate per endpoint and method
+      - record: service:http_requests_total:rate5m
+        expr: sum by (service, method, route) (rate(http_requests_total[5m]))
+
+      # Record 95th percentile response time
+      - record: job:http_request_duration_seconds:p95
+        expr: histogram_quantile(0.95, sum by (job, le) (rate(http_request_duration_seconds_bucket[5m])))
+
+      # Record error ratio
+      - record: job:http_errors:ratio5m
+        expr: sum by (job) (rate(http_requests_total{status_code=~"5.."}[5m])) / sum by (job) (rate(http_requests_total[5m]))
