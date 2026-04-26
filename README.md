@@ -211,3 +211,10 @@ Feel free to submit issues and enhancement requests!
 
 📧 Support
 For issues, please check the troubleshooting section or open a GitHub issue.
+
+## 🏷️ Badges
+
+![Docker Build](https://github.com/dockrphage/my-observability-app/actions/workflows/docker-build.yml/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Docker Compose](https://img.shields.io/badge/docker--compose-v2-blue)
+![Node.js](https://img.shields.io/badge/node.js-18.x-green)
